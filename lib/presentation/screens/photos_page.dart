@@ -24,7 +24,7 @@ class _PhotosPageState extends State<PhotosPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Photo Gallery'),
+        title: const Text('Awesome App'),
         actions: [
           BlocBuilder<PhotosBloc, PhotosState>(
             buildWhen: (previous, current) =>

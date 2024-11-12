@@ -1,4 +1,5 @@
 import 'package:awesome_app/domain/entities/photo.dart';
+import 'package:awesome_app/presentation/screens/photo_detail_page.dart';
 import 'package:awesome_app/presentation/widgets/image_box.dart';
 import 'package:flutter/material.dart';
 
@@ -71,7 +72,9 @@ class _PhotoListViewState extends State<PhotoListView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Container(),
+                  builder: (context) => PhotoDetailPage(
+                    photo: photo,
+                  ),
                 ),
               );
             },
@@ -81,7 +84,7 @@ class _PhotoListViewState extends State<PhotoListView> {
                 AspectRatio(
                   aspectRatio: 16 / 9,
                   child: ImageBox(
-                    url: photo.src?.medium ?? '',
+                    url: photo.src?.landscape ?? '',
                   ),
                 ),
                 Padding(
@@ -90,7 +93,7 @@ class _PhotoListViewState extends State<PhotoListView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        photo.photographer ?? '',
+                        photo.alt ?? '',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ],

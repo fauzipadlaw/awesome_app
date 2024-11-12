@@ -1,4 +1,5 @@
 import 'package:awesome_app/domain/entities/photo.dart';
+import 'package:awesome_app/presentation/screens/photo_detail_page.dart';
 import 'package:awesome_app/presentation/widgets/image_box.dart';
 import 'package:flutter/material.dart';
 
@@ -78,7 +79,9 @@ class _PhotoGridViewState extends State<PhotoGridView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Container(),
+                  builder: (context) => PhotoDetailPage(
+                    photo: photo,
+                  ),
                 ),
               );
             },
@@ -105,7 +108,7 @@ class _PhotoGridViewState extends State<PhotoGridView> {
                     ),
                     padding: const EdgeInsets.all(8),
                     child: Text(
-                      photo.photographer ?? '',
+                      photo.alt ?? '',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,

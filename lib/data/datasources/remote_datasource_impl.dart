@@ -23,21 +23,4 @@ class PhotoRemoteDataSourceImpl implements PhotoRemoteDataSource {
         .map((photo) => PhotoModel.fromJson(photo))
         .toList();
   }
-
-  @override
-  Future<List<PhotoModel>> searchPhotos(String query,
-      {int page = 1, int perPage = 20}) async {
-    final response = await _apiClient.get(
-      '/search',
-      params: {
-        'query': query,
-        'page': page,
-        'per_page': perPage,
-      },
-    );
-
-    return (response.data['photos'] as List)
-        .map((photo) => PhotoModel.fromJson(photo))
-        .toList();
-  }
 }
