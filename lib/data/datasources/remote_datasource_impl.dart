@@ -1,9 +1,11 @@
 import 'package:awesome_app/core/constants/string.dart';
 import 'package:awesome_app/data/datasources/remote_datasource.dart';
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import '../models/photo_list_model.dart';
 import '../models/photo_model.dart';
 
+@LazySingleton(as: RemoteDataSource)
 class RemoteDataSourceImpl implements RemoteDataSource {
   final Dio dio;
 
