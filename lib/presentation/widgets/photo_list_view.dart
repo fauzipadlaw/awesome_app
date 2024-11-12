@@ -1,4 +1,5 @@
 import 'package:awesome_app/domain/entities/photo.dart';
+import 'package:awesome_app/presentation/widgets/image_box.dart';
 import 'package:flutter/material.dart';
 
 class PhotoListView extends StatefulWidget {
@@ -79,20 +80,8 @@ class _PhotoListViewState extends State<PhotoListView> {
               children: [
                 AspectRatio(
                   aspectRatio: 16 / 9,
-                  child: Image.network(
-                    photo.src?.medium ?? '',
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
-                    },
+                  child: ImageBox(
+                    url: photo.src?.medium ?? '',
                   ),
                 ),
                 Padding(

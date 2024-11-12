@@ -1,4 +1,5 @@
 import 'package:awesome_app/domain/entities/photo.dart';
+import 'package:awesome_app/presentation/widgets/image_box.dart';
 import 'package:flutter/material.dart';
 
 class PhotoGridView extends StatefulWidget {
@@ -84,20 +85,8 @@ class _PhotoGridViewState extends State<PhotoGridView> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.network(
-                  photo.src?.medium ?? '',
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
+                ImageBox(
+                  url: photo.src?.medium ?? '',
                 ),
                 Positioned(
                   bottom: 0,
