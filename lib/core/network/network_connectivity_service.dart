@@ -38,7 +38,9 @@ class NetworkConnectivityService {
     }
 
     final hasInternet = await _internetConnectionChecker.hasInternetAccess;
-    _connectionStatusController.add(hasInternet);
+    if (!_connectionStatusController.isClosed) {
+      _connectionStatusController.add(hasInternet);
+    }
     return hasInternet;
   }
 
