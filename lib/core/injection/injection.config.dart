@@ -14,6 +14,11 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../../data/datasources/remote_datasource.dart' as _i710;
 import '../../data/datasources/remote_datasource_impl.dart' as _i616;
+import '../../data/repositories/photo_repository_impl.dart' as _i747;
+import '../../domain/repositories/photo_repository.dart' as _i236;
+import '../../domain/usecases/get_photos.dart' as _i1036;
+import '../../presentation/bloc/photos/photos_bloc.dart' as _i858;
+import '../network/api_client.dart' as _i557;
 import 'injection.dart' as _i464;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -28,9 +33,16 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final dioModule = _$DioModule();
+    gh.factory<_i557.ApiClient>(() => _i557.ApiClient());
     gh.lazySingleton<_i361.Dio>(() => dioModule.dio);
-    gh.lazySingleton<_i710.RemoteDataSource>(
-        () => _i616.RemoteDataSourceImpl(dio: gh<_i361.Dio>()));
+    gh.factory<_i710.PhotoRemoteDataSource>(
+        () => _i616.PhotoRemoteDataSourceImpl(gh<_i557.ApiClient>()));
+    gh.factory<_i236.PhotoRepository>(
+        () => _i747.PhotoRepositoryImpl(gh<_i710.PhotoRemoteDataSource>()));
+    gh.factory<_i1036.GetPhotosUseCase>(
+        () => _i1036.GetPhotosUseCase(gh<_i236.PhotoRepository>()));
+    gh.factory<_i858.PhotosBloc>(
+        () => _i858.PhotosBloc(gh<_i1036.GetPhotosUseCase>()));
     return this;
   }
 }

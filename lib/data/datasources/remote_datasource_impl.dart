@@ -1,44 +1,43 @@
-import 'package:awesome_app/core/constants/string.dart';
+import 'package:awesome_app/core/network/api_client.dart';
 import 'package:awesome_app/data/datasources/remote_datasource.dart';
-import 'package:dio/dio.dart';
+import 'package:awesome_app/data/models/photo_model.dart';
 import 'package:injectable/injectable.dart';
-import '../models/photo_list_model.dart';
-import '../models/photo_model.dart';
 
-@LazySingleton(as: RemoteDataSource)
-class RemoteDataSourceImpl implements RemoteDataSource {
-  final Dio dio;
+@Injectable(as: PhotoRemoteDataSource)
+class PhotoRemoteDataSourceImpl implements PhotoRemoteDataSource {
+  final ApiClient _apiClient;
 
-  RemoteDataSourceImpl({
-    required this.dio,
-  }) {
-    dio.options.headers['Authorization'] = apiKey;
-    dio.options.baseUrl = baseApi;
+  PhotoRemoteDataSourceImpl(this._apiClient);
+
+  @override
+  Future<List<PhotoModel>> getPhotos({int page = 1, int perPage = 20}) async {
+    final response = await _apiClient.get(
+      '/curated',
+      params: {
+        'page': page,
+        'per_page': perPage,
+      },
+    );
+
+    return (response.data['photos'] as List)
+        .map((photo) => PhotoModel.fromJson(photo))
+        .toList();
   }
 
   @override
-  Future<PhotoListModel> fetchCuratedPhotos(int page) async {
-    try {
-      final response = await dio.get(
-        '/curated',
-        queryParameters: {
-          'per_page': 10,
-          'page': page,
-        },
-      );
-      return PhotoListModel.fromJson(response.data);
-    } catch (error) {
-      throw Exception('Failed to fetch photos: $error');
-    }
-  }
+  Future<List<PhotoModel>> searchPhotos(String query,
+      {int page = 1, int perPage = 20}) async {
+    final response = await _apiClient.get(
+      '/search',
+      params: {
+        'query': query,
+        'page': page,
+        'per_page': perPage,
+      },
+    );
 
-  @override
-  Future<PhotoModel> fetchPhotoDetail(int id) async {
-    try {
-      final response = await dio.get('/photos/$id');
-      return PhotoModel.fromJson(response.data);
-    } catch (error) {
-      throw Exception('Failed to fetch photo detail: $error');
-    }
+    return (response.data['photos'] as List)
+        .map((photo) => PhotoModel.fromJson(photo))
+        .toList();
   }
 }

@@ -1,59 +1,69 @@
-import '../../domain/entities/photo_entity.dart';
+import 'package:awesome_app/domain/entities/photo.dart';
+import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-class PhotoModel extends PhotoEntity {
-  PhotoModel({
-    required super.id,
-    required super.width,
-    required super.height,
-    required super.url,
-    required super.photographer,
-    required super.photographerUrl,
-    required super.photographerId,
-    required super.avgColor,
-    required PhotoSrcModel super.src,
-    required super.liked,
-    required super.alt,
+part 'photo_model.g.dart';
+
+@JsonSerializable()
+class PhotoModel extends Equatable {
+  final int id;
+  final String? url;
+  final String? photographer;
+  final String? photographerUrl;
+  final PhotoSourceModel? src;
+  final String? alt;
+
+  const PhotoModel({
+    required this.id,
+    this.url,
+    this.photographer,
+    this.photographerUrl,
+    this.src,
+    this.alt,
   });
 
-  factory PhotoModel.fromJson(Map<String, dynamic> json) {
-    return PhotoModel(
-      id: json['id'],
-      width: json['width'],
-      height: json['height'],
-      url: json['url'],
-      photographer: json['photographer'],
-      photographerUrl: json['photographer_url'],
-      photographerId: json['photographer_id'],
-      avgColor: json['avg_color'],
-      src: PhotoSrcModel.fromJson(json['src']),
-      liked: json['liked'],
-      alt: json['alt'],
-    );
-  }
+  factory PhotoModel.fromJson(Map<String, dynamic> json) =>
+      _$PhotoModelFromJson(json);
+
+  @override
+  List<Object?> get props => [id, url, photographer, photographerUrl, src, alt];
 }
 
-class PhotoSrcModel extends PhotoSrcEntity {
-  PhotoSrcModel({
-    required super.original,
-    required super.large2x,
-    required super.large,
-    required super.medium,
-    required super.small,
-    required super.portrait,
-    required super.landscape,
-    required super.tiny,
+@JsonSerializable()
+class PhotoSourceModel extends Equatable {
+  final String? original;
+  final String? large;
+  final String? medium;
+  final String? small;
+
+  const PhotoSourceModel({
+    this.original,
+    this.large,
+    this.medium,
+    this.small,
   });
 
-  factory PhotoSrcModel.fromJson(Map<String, dynamic> json) {
-    return PhotoSrcModel(
-      original: json['original'],
-      large2x: json['large2x'],
-      large: json['large'],
-      medium: json['medium'],
-      small: json['small'],
-      portrait: json['portrait'],
-      landscape: json['landscape'],
-      tiny: json['tiny'],
+  factory PhotoSourceModel.fromJson(Map<String, dynamic> json) =>
+      _$PhotoSourceModelFromJson(json);
+
+  @override
+  List<Object?> get props => [original, large, medium, small];
+}
+
+extension PhotoModelMapper on PhotoModel {
+  Photo toDomain() {
+    return Photo(
+      id: id,
+      url: url,
+      photographer: photographer,
+      photographerUrl: photographerUrl,
+      src: PhotoSource(
+        original: src?.original,
+        large: src?.large,
+        medium: src?.medium,
+        small: src?.small,
+      ),
+      alt: alt,
     );
   }
 }

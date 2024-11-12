@@ -1,30 +1,21 @@
 import 'package:awesome_app/data/datasources/remote_datasource.dart';
-import 'package:awesome_app/domain/entities/photo_entity.dart';
-import 'package:awesome_app/domain/entities/photo_list_entity.dart';
-import 'package:awesome_app/domain/repositories/photo_repository.dart';
+import 'package:awesome_app/data/models/photo_model.dart';
+import 'package:awesome_app/domain/entities/photo.dart';
+import 'package:injectable/injectable.dart';
+import '../../domain/repositories/photo_repository.dart';
 
+@Injectable(as: PhotoRepository)
 class PhotoRepositoryImpl implements PhotoRepository {
-  final RemoteDataSource remoteDataSource;
+  final PhotoRemoteDataSource _remoteDataSource;
 
-  PhotoRepositoryImpl({required this.remoteDataSource});
-
-  @override
-  Future<PhotoListEntity> getCuratedPhotos(int page) async {
-    try {
-      final photos = await remoteDataSource.fetchCuratedPhotos(page);
-      return photos;
-    } catch (error) {
-      throw Exception('Failed to fetch photos: $error');
-    }
-  }
+  PhotoRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<PhotoEntity> getPhotoDetail(int id) async {
-    try {
-      final photo = await remoteDataSource.fetchPhotoDetail(id);
-      return photo;
-    } catch (error) {
-      throw Exception('Failed to fetch photo detail: $error');
-    }
+  Future<List<Photo>> getPhotos({int page = 1, int perPage = 20}) async {
+    final photoModels = await _remoteDataSource.getPhotos(
+      page: page,
+      perPage: perPage,
+    );
+    return photoModels.map((model) => model.toDomain()).toList();
   }
 }

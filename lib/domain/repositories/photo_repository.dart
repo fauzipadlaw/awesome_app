@@ -1,7 +1,5 @@
-import 'package:awesome_app/domain/entities/photo_entity.dart';
-import 'package:awesome_app/domain/entities/photo_list_entity.dart';
+import 'package:awesome_app/domain/entities/photo.dart';
 
 abstract class PhotoRepository {
-  Future<PhotoListEntity> getCuratedPhotos(int page);
-  Future<PhotoEntity> getPhotoDetail(int id);
+  Future<List<Photo>> getPhotos({int page = 1, int perPage = 20});
 }
